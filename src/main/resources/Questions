@@ -1,0 +1,70 @@
+🔹 Basic Level
+
+What is the Java Stream API?
+Difference between Collection and Stream in Java?
+What are intermediate and terminal operations in streams?
+Give examples of intermediate operations.
+Give examples of terminal operations.
+Can a stream be reused after a terminal operation? Why or why not?
+What is the difference between map() and flatMap()?
+How do you sort a list using streams?
+How do you filter a list of even numbers using Stream API?
+How to convert a stream to a list or set?
+
+🔸 Intermediate Level
+
+Explain lazy evaluation in streams.
+What is the difference between forEach() and forEachOrdered()?
+What is short-circuiting in Stream operations?
+How does peek() work in a stream pipeline?
+What is the difference between findFirst() and findAny()?
+What is reduce() and how is it used?
+How do you count duplicate elements using Stream API?
+How do you group elements using Collectors.groupingBy()?
+How do you remove duplicates from a stream?
+How do you handle exceptions in a Stream pipeline?
+
+********************************************
+
+✅ Beginner-Level Programming Questions
+Filter even numbers from a list.
+Convert a list of strings to uppercase.
+Sort a list in reverse order.
+Remove duplicates from a list.
+Count the number of elements greater than a certain value.
+
+✅ Intermediate-Level Programming Questions
+Find the second highest number in a list.
+Count the frequency of each word in a sentence.
+Group a list of employees by department using Collectors.groupingBy().
+Find all strings starting with a specific letter.
+Join a list of strings into a single string separated by commas.
+
+
+Interview qstns Java - DXC member
+
+java8 optional class - npe
+why static default
+@FunctionalInterface
+even odd, second high salary
+Anagram
+
+prime num
+factorial
+missing num ,,
+count freq
+longest consecutive length array,string
+hashmap internal
+flatmap ->
+consumer, supplier
+
+8 features
+
+what serialization, deserialization,
+enums
+time complexity, worst case
+spring,sb
+controller,restcontroller
+sort array and merge array ->
+rev string, find occurance,
+hash collision -
