@@ -1,6 +1,5 @@
 package com.example.StreamAPIs.programs;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class Student1 {

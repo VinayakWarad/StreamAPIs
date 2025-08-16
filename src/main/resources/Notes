@@ -43,3 +43,39 @@
 | **Common Use Cases**      | Convert types, extract fields, apply formulas | Sum, max, min, concatenate strings, aggregate values             |
 | **Stream Type**           | Returns a **Stream**                          | Returns a **Single value** (e.g. `Optional<T>` or `T`)           |
 
+5. groupingBy :
+✅ When to Use groupingBy()
+Use Collectors.groupingBy() when you want to group elements in a stream by a specific key or property,
+typically to:
+Group data (e.g., by department, category, type, etc.)
+Aggregate data within each group (count, sum, average, collect into list, etc.)
+
+Format :
+Collectors.groupingBy(classifierFunction)
+Collectors.groupingBy(classifierFunction, downstreamCollector)
+
+📌 Common Use Cases
+1. Count items by a property
+Map<String, Long> countByDept = employees.stream()
+    .collect(Collectors.groupingBy(Employee::getDept, Collectors.counting()));
+
+2. Group into lists
+Map<String, List<Employee>> employeesByDept = employees.stream()
+    .collect(Collectors.groupingBy(Employee::getDept));
+
+3. Calculate average by group
+Map<String, Double> avgAgeByDept = employees.stream()
+    .collect(Collectors.groupingBy(Employee::getDept, Collectors.averagingInt(Employee::getAge)));
+
+4. Sum values by group
+Map<String, Integer> totalAgeByDept = employees.stream()
+    .collect(Collectors.groupingBy(Employee::getDept, Collectors.summingInt(Employee::getAge)));
+
+5. Nested grouping
+Map<String, Map<Integer, List<Employee>>> groupedByDeptThenAge = employees.stream()
+    .collect(Collectors.groupingBy(Employee::getDept,
+        Collectors.groupingBy(Employee::getAge)));
+
+
+
+
