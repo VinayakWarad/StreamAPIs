@@ -19,6 +19,21 @@ limit(n)	    Truncates the stream to n elements.
 skip(n)	        Skips the first n element.
 peek()	        Performs an action on each element (mainly for debugging).  */
 
+        List<Integer> al=Arrays.asList(1,2,3,4,5);
+       List<Integer> al1=  al
+                .stream()
+                .filter(input->
+                                { if (input>3) {return true;}
+                                    return false;
+                                }
+                        )
+                .map(input->input+10)
+               .distinct()
+                .collect(Collectors.toList());
+        System.out.println(al1);
+
+
+
 System.out.println("Print Integer stream elements");
         Stream.of(1, 2, 3, 4, 5, 6, 7, 8)
                 .forEach(x -> System.out.println(x));
@@ -31,8 +46,8 @@ System.out.println("Print Integer stream elements");
 
 // Ex 3 : filter and collect to List
         Stream.of("A", "b", "c", "d")
-                .filter(a -> {
-                    if (a.equals("A") || a.equals("b"))
+                .filter(input -> {
+                    if (input.equals("A") || input.equals("b"))
                     {  return true;  }
                     return false;
                 }).collect(Collectors.toList())
@@ -46,8 +61,8 @@ System.out.println("Print Integer stream elements");
         Stream.of("A", "b", "C", "d")
                 .map(String::toLowerCase) // .map(a->a.toUpperCase)
                 .limit(3)
-                .collect(Collectors.toList())
-                .stream()
+               // .collect(Collectors.toList())
+                //.stream()
                 .map(a -> a.toUpperCase(Locale.ROOT))
                 .forEach(System.out::println);
 
@@ -85,6 +100,7 @@ System.out.println("Count of strings in stream");
         studentList.add(new Student("Akshay", 30, 98299388399l));
 
         System.out.println("How many times string Vinayak is duplicated in list");
+        long x=studentList.stream().count();
         long count = studentList.stream()
                         .filter(std -> std.getName().equals("Vinayak"))
                         .collect(Collectors.toList())
@@ -102,7 +118,7 @@ System.out.println("Count of strings in stream");
         studentList.stream()
                 .filter(a -> a.getName().startsWith("A"))
                 .peek(a -> System.out.println(a))
-                .map(a -> a.getName())
+                .map(a -> a.getName().toUpperCase())
                 .forEach(System.out::println);
 
         System.out.println("Print distinct strings");
@@ -113,8 +129,8 @@ System.out.println("Count of strings in stream");
         System.out.println("Sorting");
         Stream.of(1, 42, 3, 4, 5, 8, 3, 9)
                 .sorted()
-                .collect(Collectors.toList())
-                .stream()
+              //  .collect(Collectors.toList())
+                //.stream()
                 .forEach(System.out::println);
 
 
@@ -138,14 +154,29 @@ Map<String,Integer> stdnts=studentList.stream()
 
 System.out.println("Take student list and get name as key and value as age and store it in map" +
         "then iterate map and print map entries");
-/*Map<String,Integer> stdnts=*/studentList.stream()
-                       // .filter(std -> std.getName().equals("Vinayak"))
-                        .collect(Collectors.toMap(a->a.getName(),a-> a.getAge()))
-                        .entrySet()
-                        .stream()
-                        .forEach(System.out::println);
 
+        studentList.stream()
+                //.collect(Collectors.toMap(a->a.getName(),a-> a.getAge()))
+                .collect(Collectors.toMap(Student::getName,Student::getAge))
+                .entrySet()
+                .stream()
+                .forEach(System.out::println);
 
+//Below is same functionality as above but result is stored instead of printing
+Map<String,Integer> stdntsMap=studentList.stream()
+                        //.collect(Collectors.toMap(a->a.getName(),a-> a.getAge()))
+                        .collect(Collectors.toMap(Student::getName,Student::getAge));
 
+System.out.println("FLatmap - Extract All Courses from All Students");
+            List<Student1> students = Arrays.asList(
+                    new Student1("Alice", Arrays.asList("Math", "Physics")),
+                    new Student1("Bob", Arrays.asList("Chemistry", "Math")),
+                    new Student1("Charlie", Arrays.asList("Biology"))
+            );
+            List<String> allCourses = students.stream()
+                    .flatMap(student -> student.getCourses().stream())
+                    .distinct() // optional: removes duplicates
+                    .collect(Collectors.toList());
+            System.out.println(allCourses);// Output: [Math, Physics, Chemistry, Biology]
 }
 }

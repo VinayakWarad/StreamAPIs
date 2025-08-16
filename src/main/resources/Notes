@@ -1,0 +1,45 @@
+1. Difference between Streams and parallelStreams
+
+| Feature                 | `stream()`                                         | `parallelStream()`           |
+| ----------------------- | -------------------------------------------------- | ---------------------------- |
+| Execution               | Sequential (single thread)                         | Concurrent (multi-threaded)  |
+| Order guarantee         | Yes                                                | No (unless `forEachOrdered`) |
+| Performance gain        | Only for **large data** & CPU-intensive operations |                              |
+| Thread safety required? | Yes, if mutable shared state is accessed           |                              |
+
+
+2. When NOT to Use Parallel Streams
+   For small data sets – overhead > benefit.
+   When your processing involves I/O or shared mutable state (e.g. writing to a shared list).
+   If order of execution is critical and you're using forEach.
+
+| Metric          | `stream()`         | `parallelStream()`                   |
+| --------------- | ------------------ | ------------------------------------ |
+| Threads used    | 1 (main thread)    | Multiple (ForkJoinPool)              |
+| Execution speed | Slower             | Faster (if CPU-bound)                |
+| Order guarantee | Yes                | No (unless `forEachOrdered`)         |
+| Overhead        | Low                | Higher (splitting + merging threads) |
+| Ideal for       | Simple, small data | Large, CPU-heavy operations          |
+
+
+3. When to Use parallelStream()
+
+   | Situation                 | Recommendation                       |
+   | ------------------------- | ------------------------------------ |
+   | List size > 10,000 items  | ✅ Consider parallel                  |
+   | Heavy CPU task (math ops) | ✅ Yes                                |
+   | Light or fast operations  | ❌ Avoid parallel                     |
+   | Shared mutable state      | ❌ Avoid parallel                     |
+   | Order-dependent logic     | ❌ Use sequential or `forEachOrdered` |
+
+4. Difference between map and reduce
+
+| Feature                   | `map()`                                       | `reduce()`                                                       |
+| ------------------------- | --------------------------------------------- | ---------------------------------------------------------------- |
+| **Purpose**               | Transforms each element                       | Combines all elements into a single result                       |
+| **Input**                 | Function to apply to each element             | Binary operator (2 inputs, 1 output)                             |
+| **Output**                | New stream with transformed elements          | Single value (wrapped in `Optional<T>` unless identity provided) |
+| **Intermediate/Terminal** | Intermediate operation (can be chained)       | Terminal operation (ends the stream pipeline)                    |
+| **Common Use Cases**      | Convert types, extract fields, apply formulas | Sum, max, min, concatenate strings, aggregate values             |
+| **Stream Type**           | Returns a **Stream**                          | Returns a **Single value** (e.g. `Optional<T>` or `T`)           |
+

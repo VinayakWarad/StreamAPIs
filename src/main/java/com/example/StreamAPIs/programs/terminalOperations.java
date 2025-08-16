@@ -39,7 +39,7 @@ String concat	 ""
 Finding          max	Integer.MIN_VALUE (in some cases)
 Finding          min_Integer.MAX_VALUE (in some cases)*/
 
-System.out.println("Find maximum number");
+System.out.println("Concat all string values");
 List<String> names = List.of("Vinayak", "Nireeksha", "Mukta");
 String result = names.stream()
         .reduce("", (a, b) -> a + b);
@@ -53,7 +53,6 @@ System.out.println(nums); // Output: 15
 
 List<Student> studentList = new ArrayList<>();
 studentList.add(new Student("Vinayak", 28, 98299388399l));
-//  studentList.add(new Student("Vinayak", 28, 98299388399l));
 studentList.add(new Student("Vishwa", 29, 98299388399l));
 studentList.add(new Student("Akshay", 30, 98299388399l));
 
@@ -71,7 +70,7 @@ oldest.ifPresent(s ->
 ); // Output: Oldest: Akshay, Age: 30
 
 
-System.out.println("Pring student with 2nd highest age");
+System.out.println("Print student with 2nd highest age");
 Optional<Student> secondHighestStudent = studentList.stream()
         .sorted(Comparator.comparingInt(Student::getAge).reversed()) // sort by age descending
         .distinct() // this only works if equals/hashCode is overridden (optional in this case)
@@ -122,9 +121,6 @@ Optional<Integer> maxi = numbers.stream().max(Integer::compareTo);
 min.ifPresent(m -> System.out.println("Min: " + m));
 maxi.ifPresent(m -> System.out.println("Max: " + m));
 //Optional<T> is a container object that may or may not contain a non-null value.
-
-
-
 
     }
 }
