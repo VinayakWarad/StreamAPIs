@@ -40,7 +40,7 @@ class flatMap3{
 class flatMap4{
     public static void main(String[] args) {
 
-System.out.println("Convert String arralist to string list and letter should be split to string");
+System.out.println("Convert String arraylist to string list and letter should be split to string");
 List<String> words = Arrays.asList("Hello", "World");
 List<String> characters = words.stream()
         .flatMap(word -> Arrays.stream(word.split("")))

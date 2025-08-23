@@ -76,6 +76,393 @@ Map<String, Map<Integer, List<Employee>>> groupedByDeptThenAge = employees.strea
     .collect(Collectors.groupingBy(Employee::getDept,
         Collectors.groupingBy(Employee::getAge)));
 
+When to use groupingBy :
+
+Use when you want to group elements by a classifier function that returns any kind of key (not just boolean).
+Result: Map<K, List<T>> (or other downstream collectors)
+Example: Group people by city, products by category, employees by department, etc.
+
+Map<String, List<Person>> peopleByCity = people.stream()
+    .collect(Collectors.groupingBy(Person::getCity));
+
+	Groups by city and maps whole object (Without using mapping function)
+{
+  Engineering=[Employee@1a2b3c4, Employee@4d5e6f7],
+  HR=[Employee@7f8e9d0]
+}
+----------------------------------------------------------
+
+Map<String, List<String>> namesByDept = employees.stream()
+    .collect(Collectors.groupingBy(
+        Employee::getDepartment,
+        Collectors.mapping(Employee::getName, Collectors.toList())
+    ));
+
+Grpups by dept and lists by Name
+{Engineering=[Alice, Charlie], HR=[Bob]}
+
+
+--------------------------------------------------
+Partitioning : When to use partitioningBy
+
+Use when you want to split elements into two groups based on a boolean predicate.
+Result: Map<Boolean, List<T>> with two keys: true and false
+It's essentially a special case of grouping where the key is only true or false.
+
+Map<Boolean, List<Person>> adultsAndMinors = people.stream()
+    .collect(Collectors.partitioningBy(p -> p.getAge() >= 18));
+
+
+---------------------------------------------------
+
+Collectors.summingInt
+
+What it does:
+Sums up all the integer values extracted from the stream elements.
+Sum of all employees’ ages:
+
+int totalAge = employees.stream()
+    .collect(Collectors.summingInt(Employee::getAge));
+
+---------------------------------------------------
+
+Collectors.averagingInt
+
+What it does:
+Calculates the average (mean) of the integer values extracted from the stream elements.
+Average age of employees:
+
+double avgAge = employees.stream()
+    .collect(Collectors.averagingInt(Employee::getAge));
+
+---------------------------------------------------
+
+Collectors.toList()
+
+Purpose: Collect stream elements as-is into a List.
+List<String> names = employees.stream()
+    .map(Employee::getName)
+    .collect(Collectors.toList());
+
+---------------------------------------------------
+
+Collectors.toMap()
+
+Purpose: Collect stream elements into a Map with keys and values derived from the elements.
+
+Map<Integer, String> idToName = employees.stream()
+    .collect(Collectors.toMap(Employee::getId, Employee::getName));
+
+-----------------------------------------------------
+
+
+Duplicate elements :
+
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+public class DuplicatesFinder {
+    public static void main(String[] args) {
+        List<Integer> numbers = Arrays.asList(1, 2, 3, 2, 4, 5, 1, 6);
+
+        List<Integer> duplicates = numbers.stream()
+            .collect(Collectors.groupingBy(Function.identity(), Collectors.counting())) // Count occurrences
+            .entrySet().stream()
+            .filter(entry -> entry.getValue() > 1) // Keep only entries with count > 1
+            .map(Map.Entry::getKey) // Extract the keys (duplicates)
+            .collect(Collectors.toList()); // Collect to list
+
+        System.out.println("Duplicate elements: " + duplicates);
+    }
+}
+
+-----------------------------------------------------------
+
+Longest String
+
+        List<String> words = Arrays.asList("apple", "banana", "strawberry", "kiwi");
+        Optional<String> longest = words.stream()
+            .max(Comparator.comparingInt(String::length));
+        longest.ifPresent(str -> System.out.println("Longest string: " + str));
+
+------------------------------------------------------------
+
+Group a list of strings by their first character.
+
+List<String> names = Arrays.asList("Alice", "Bob", "Charlie", "Anna", "Brian");
+
+names.stream().collect(Collectors.groupingBy(obj->obj.charAt(0)));
+
+------------------------------------------------------------
+
+Given a string, find the first non-repeated character using Stream API.
+String input = "swiss";
+
+        for (char ch : input.toCharArray()) {
+            if (input.indexOf(ch) == input.lastIndexOf(ch)) {
+                System.out.println("First non-repeated character: " + ch);
+                return;
+            }
+        }
+
+        System.out.println("No non-repeated character found.");
+
+---------------------------------------------------------------
+
+Given a list of lists of integers, flatten it into a single list of integers using streams.
+
+List<List<Integer>> nestedList = Arrays.asList(
+    Arrays.asList(1, 2),
+    Arrays.asList(3, 4),
+    Arrays.asList(5)
+);
+
+        List<Integer> flatList = nestedList.stream()
+            .flatMap(List::stream)  // flatten each inner list
+            .collect(Collectors.toList());  // collect into a single list
+
+        System.out.println("Flattened list: " + flatList);
+
+-----------------------------------------------------------
+
+Given a list of strings, sort them first by length, then alphabetically.
+List<String> words = Arrays.asList("dog", "elephant", "cat", "bear", "ant");
+
+        List<String> words = Arrays.asList("dog", "elephant", "cat", "bear", "ant");
+        List<String> sorted = words.stream()
+            .sorted(
+                Comparator.comparingInt(String::length)  // sort by length first
+                          .thenComparing(Comparator.naturalOrder())  // then alphabetically
+            )
+            .collect(Collectors.toList());
+        System.out.println(sorted);
+
+------------------------------------------------------------
+
+Filter and Collect to Map
+From a list of people, filter only those older than 18 and collect them into a map of name to age.
+
+list.stream().filter(n->n.getAge()>18).collect(Collectors.toMap(People::getName, People::getName,(age1, age2) -> age1));
+
+-------------------------------------------------------------
+Partition Into Even and Odd Partition a list of integers into even and odd numbers using Collectors.partitioningBy.
+
+List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5, 6);
+List<Boolean,List<Integer>> res =list.stream().collect(Collectors.partitioningBy(n->n%2==0));
+System.out.println("Even numbers"+res.get(true));
+System.out.println("Odd numbers"+res.get(false));
+
+-------------------------------------------------------------
+
+Custom Collector
+
+Implement a custom collector that collects strings into a single string separated by -, and all uppercase.
+List<String> words = Arrays.asList("java", "stream", "api");
+
+        String result = words.stream()
+            .map(String::toUpperCase)             // convert each word to uppercase
+            .collect(Collectors.joining("+"));    // join with '+'
+        System.out.println(result);  // Output: JAVA-STREAM-API
+
+-------------------------------------------------------------
+
+FlatMap :
+
+Flatten a List of Strings into Characters
+List<String> words = Arrays.asList("Hello", "World");
+
+        List<Character> chars = words.stream()
+            .flatMap(word -> word.chars().mapToObj(c -> (char) c))
+            .collect(Collectors.toList());
+
+        System.out.println(chars);
+
+----------------------------------------------------------
+
+Flatten this into a single list and filter out duplicates, returning only unique fruits.
+List<List<String>> listOfLists = Arrays.asList(
+    Arrays.asList("apple", "banana"),
+    Arrays.asList("pear", "banana"),
+    Arrays.asList("orange", "apple")
+);
+
+        List<String> uniqueFruits = listOfLists.stream()
+            .flatMap(List::stream)      // flatten to stream of fruits
+            .distinct()                 // filter out duplicates
+            .collect(Collectors.toList());
+
+        System.out.println(uniqueFruits);
+
+------------------------------------------------------------------
+Flatmap with Optional
+
+Given a list of users, each with an optional email, use flatMap to collect all available emails into a list.
+users.stream()
+     .flatMap(user -> user.getEmail().stream()) // Optional to Stream
+     .collect(Collectors.toList());
+
+------------------------------------------------------------------
+Flatten a List of Arrays
+
+	List<String[]> listOfArrays = Arrays.asList(
+    new String[]{"a", "b"},
+    new String[]{"c", "d"},
+    new String[]{"e"}
+);
+
+List<String> flatList = listOfArrays.stream()
+    .flatMap(Arrays::stream)     // flatten each array into stream of strings
+    .collect(Collectors.toList());
+
+System.out.println(flatList);  // Output: [a, b, c, d, e]
+
+---------------------------------------------------------------------
+Flatten a Map of Lists
+Map<String, List<String>> map = new HashMap<>();
+map.put("fruits", Arrays.asList("apple", "banana"));
+map.put("vegetables", Arrays.asList("carrot", "peas"));
+
+List<String> allItems = map.values().stream()
+    .flatMap(List::stream)       // flatten all lists from map values
+    .collect(Collectors.toList());
+
+System.out.println(allItems);  // Output: [apple, banana, carrot, peas]
+
+--------------------------------------------------------------------
+
+Optional :
+
+
+Optional forces you to think about the "no result" case explicitly, using methods like:
+
+.isPresent()
+.orElse(defaultValue)
+.orElseGet(supplier)
+.ifPresent(consumer)
+.orElseThrow(exceptionSupplier)
+
+| Method                                  | Returns                              | Notes                               |
+| --------------------------------------- | ------------------------------------ | ----------------------------------- |
+| `findFirst()`                           | `Optional<T>`                        | Returns the first element           |
+| `findAny()`                             | `Optional<T>`                        | Returns any element (parallel safe) |
+| `max(Comparator)`                       | `Optional<T>`                        | Returns max element by comparator   |
+| `min(Comparator)`                       | `Optional<T>`                        | Returns min element by comparator   |
+| `reduce(BinaryOperator)`                | `Optional<T>`                        | Reduction without identity          |
+| `collect(Collectors.maxBy(comparator))` | `Optional<T>` (wrapped in collector) | Max by comparator via collector     |
+| `collect(Collectors.minBy(comparator))` | `Optional<T>` (wrapped in collector) | Min by comparator via collector     |
+
+---------------------------------------------------------------------
+
+8. Case-insensitive key map – username → user
+        Map<String, User> usernameMap = users.stream()
+            .collect(Collectors.toMap(
+                u -> u.getUsername().toLowerCase(),
+                Function.identity(),
+                (existing, replacement) -> existing  // keep the first user
+            ));
+
+        usernameMap.forEach((key, user) ->
+            System.out.println("Key: " + key + " => Value: " + user)
+        );
+
+Key: alice => Value: User{username='Alice', email='alice@example.com'}
+Key: bob => Value: User{username='bob', email='bob@example.com'}
+Key: charlie => Value: User{username='CHARLIE', email='charlie@example.com'}
+
+---------------------------------------------------------------------------------
+
+5.Find Max
+
+Task: Given a list of Person objects (with fields name and age), find the oldest person. Return an Optional<Person>.
+Optional<Person> res = list.stream()
+    .max(Comparator.comparingInt(Person::getAge));
+
+
+-------------------------------------------------------
+        Optional<Student> topScorer = students.stream()
+            .collect(Collectors.maxBy(Comparator.comparing(Student::getScore)));
+
+        topScorer.ifPresent(student ->
+            System.out.println("Top Scorer: " + student)
+        );
+
+----------------------------------------------------------------
+
+T result = stream.reduce(identity, accumulator);
+
+Optional<Integer> sum = numbers.stream().reduce(Integer::sum);
+
+---------------------------------------------------------------------------------------
+
+list.parallelStream()
+    .forEachOrdered(System.out::println);  // Preserves order
+
+----------------------------------------------------------------------
+
+
+int sum = list.stream()
+    .filter(s -> s % 2 == 0)
+    .mapToInt(Integer::intValue)
+    .sum();
+
+---------------------------------------------------
+
+Highest salary using reduce
+
+Optional<Employee> highestPaid = lst.stream()
+    .reduce((e1, e2) -> e1.getSalary() > e2.getSalary() ? e1 : e2);
+
+----------------------------------------------------------------
+List<List<Integer>> nested = List.of(
+    List.of(1, 2),
+    List.of(3, 4),
+    List.of(5)
+);
+
+nested.stream().flatMap(Stream::list).collect(Collectors.toList());
+
+List<Integer> flat = [1, 2, 3, 4, 5];
+
+-------------------------------------------------------------------
+Find the highest-paid employee in each department.
+Map<String, Optional<Employee>> highestPaidByDept = list.stream()
+    .collect(Collectors.groupingBy(
+        Employee::getDepartment,
+        Collectors.maxBy(Comparator.comparingDouble(Employee::getSalary))
+    ));
+
+---------------------------------------------------------------
+
+Convert a list of strings to a single comma-separated string.
+List<String> names = List.of("Alice", "Bob", "Charlie");
+
+String result = names.stream()
+    .collect(Collectors.joining(","));
+
+"Alice,Bob,Charlie"
+
+---------------------------------------------------------------
+
+2nd highest salary
+Optional<Double> secondHighest = list.stream()
+    .map(Employee::getSalary)
+    .sorted(Comparator.reverseOrder())
+    .skip(1)
+    .findFirst();
+
+-------------------------------------------------
+
+boolean hasHighSalary = list.stream()
+    .anyMatch(e -> e.getSalary() > 100000);
+
+
+
+
+
+
+
+
 
 
 

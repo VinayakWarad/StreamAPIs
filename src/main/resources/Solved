@@ -1,0 +1,106 @@
+Q1: Convert a list of strings to lowercase.
+names.stream().map(s -> s.toLowerCase()).collect(Collectors.toList());
+
+Q2: Convert a list of strings to uppercase.
+List<String> upperCaseNames = names.stream()
+    .map(String::toUpperCase)
+    .collect(Collectors.toList());
+
+Q3: Find the longest string in a list.
+list.stream().max(Comparator.comparingInt(String::length));
+
+Q4: Count how many strings start with "a" (case-insensitive).
+list.stream().map(s -> s.toLowerCase()).filter(s -> s.startsWith("a")).count();
+
+Q5: (No valid answer provided for the faulty example.)
+Q6: From a list of numbers greater than 10, square them and collect as list.
+list.stream().filter(n -> n > 10).map(n -> n * n).collect(Collectors.toList());
+
+Q7: Get a sorted list of employee names.
+list.stream().map(Employee::getName).sorted().collect(Collectors.toList());
+
+Q8: (Invalid syntax example; no correct version provided.)
+Q9: Get distinct strings from a list as a set.
+list.stream().distinct().collect(Collectors.toSet());
+
+Q10: Calculate average age from a list of persons.
+lst.stream().mapToInt(Person::getAge).average();
+
+Q11: Find employee with maximum salary.
+list.stream().max(Comparator.comparingInt(Employee::getSalary));
+
+Q12: Find the highest-paid employee (reduce example).
+Optional<Employee> highestPaid = list.stream()
+    .reduce((e1, e2) -> e1.getSalary() > e2.getSalary() ? e1 : e2);
+
+Q13: Flatten a nested list of lists.
+List<Integer> flat = nested.stream()
+    .flatMap(List::stream)
+    .collect(Collectors.toList());
+
+Q14: Group employees by department.
+Map<String, List<Employee>> grouped = list.stream()
+    .collect(Collectors.groupingBy(Employee::getDepartment));
+
+Q15: Count employees per department.
+Map<String, Long> counts = list.stream()
+    .collect(Collectors.groupingBy(
+        Employee::getDepartment,
+        Collectors.counting()
+    ));
+
+Q16: Find highest-paid employee per department.
+Map<String, Optional<Employee>> highestPaidByDept = list.stream()
+    .collect(Collectors.groupingBy(
+        Employee::getDepartment,
+        Collectors.maxBy(Comparator.comparingDouble(Employee::getSalary))
+    ));
+
+Q17: Join list of names into a comma-separated string.
+String result = names.stream()
+    .collect(Collectors.joining(","));
+
+Q18: Find the second highest salary.
+Optional<Double> secondHighest = list.stream()
+    .map(Employee::getSalary)
+    .sorted(Comparator.reverseOrder())
+    .skip(1)
+    .findFirst();
+
+Q19: Partition integers into evens and odds.
+Map<Boolean, List<Integer>> res = list.stream()
+    .collect(Collectors.partitioningBy(n -> n % 2 == 0));
+
+List<Integer> evens = res.get(true);
+List<Integer> odds = res.get(false);
+
+Q20: Get a comma-separated uppercase string of employee names.
+String result = list.stream()
+    .map(Employee::getName)
+    .map(String::toUpperCase)
+    .collect(Collectors.joining(","));
+
+Q21: Calculate product of integers in a list.
+int product = list.stream()
+    .reduce(1, (a, b) -> a * b);
+
+Q22: Count people by city.
+Map<String, Long> peopleCountByCity = list.stream()
+    .collect(Collectors.groupingBy(Person::getCity, Collectors.counting()));
+
+Q23: Calculate total salary from employees.
+double totalSalary = list.stream()
+    .collect(Collectors.summingDouble(Employee::getSalary));
+
+Q24: Find the length of the longest string.
+OptionalInt maxLength = s.stream()
+    .mapToInt(String::length)
+    .max();
+
+Q25: Check if any employee earns more than 100,000.
+boolean hasHighSalary = list.stream()
+    .anyMatch(e -> e.getSalary() > 100000);
+
+Q26: Check if all strings start with "A".
+boolean allStartWithA = list.stream()
+    .allMatch(n -> n.startsWith("A"));
